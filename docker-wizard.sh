@@ -160,7 +160,6 @@ upload_container() {
         echo "Upload container to Dockerhub:"
         read -p "Enter your username/tag: " tag_container
         read -p "Enter name of container: " upload_name
-        docker tag $upload_name $tag_container/$upload_name
         echo "1. Upload with Docker CLI"
         echo "2. Upload with Docker Compose"
         read -p "Enter your choice: " upload_choice
@@ -168,11 +167,13 @@ upload_container() {
 
         if [ $upload_choice -eq 1 ]; then
             docker login
+            docker build -t $tag_container/$upload_name .
             docker push $tag_container/$upload_name
             echo "Container uploaded to Dockerhub."
             echo ""
         elif [ $upload_choice -eq 2 ]; then
             docker login
+            docker-compose -p $tag_container/$upload_name up -d
             docker-compose -p $tag_container/$upload_name push
             echo "Container uploaded to Dockerhub."
             echo ""
@@ -186,6 +187,7 @@ upload_container() {
         echo "Local Registry running on port 5000."
         echo ""
         read -p "Enter name of container: " upload_name_lr
+        docker build -t localhost:5000/$upload_name_lr .
         docker tag $upload_name_lr localhost:5000/$upload_name_lr
         docker push localhost:5000/$upload_name2
         echo "Container $upload_name_lr uploaded to Local Registry."
@@ -196,10 +198,10 @@ upload_container() {
         read -p "Enter your Github Username: " github_user
         read -p "Enter your Personal Access Token: " github_token
         docker login -u $github_user -p $github_token ghcr.io
-        echo "Enter name of container: " upload_name_gh
-        docker tag $upload_name_gh ghcr.io/$github_user/$upload_name_gh
-        docker build -t ghcr.io/$github_user/$upload_name_gh
-        docker push ghcr.io/$github_user/$upload_name_gh
+        read -p "Enter name of container: " upload_name_gh
+        docker build -t ghcr.io/$github_user/$upload_name_gh:latest .
+        docker tag $upload_name_gh ghcr.io/$github_user/$upload_name_gh:latest
+        docker push ghcr.io/$github_user/$upload_name_gh:latest
         echo "Container $upload_name_gh uploaded to Github Container Registry."
         echo ""
     else
