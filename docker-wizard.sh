@@ -65,6 +65,12 @@ create_container_dockerfile() {
     echo "COPY . ." >> Dockerfile
     echo "EXPOSE $port_df" >> Dockerfile
     echo "CMD $run_command_df" >> Dockerfile
+
+    # Ask if user wants to edit Dockerfile
+    read -p "Do you want to modify the Dockerfile before building? (y/n): " modify_dockerfile
+    if [ "$modify_dockerfile" == "y" ]; then
+        nano Dockerfile
+    fi
     
     # Build and run the container
     docker build -t $container_name_df .
@@ -103,6 +109,12 @@ services:
       - $environment_dc
 EOF
     
+    # Ask if user wants to edit docker-compose.yml
+    read -p "Do you want to modify the docker-compose.yml before building? (y/n): " modify_compose
+    if [ "$modify_compose" == "y" ]; then
+        nano docker-compose.yml
+    fi
+
     # Build and run the container
     docker-compose -p $container_name_dc up -d
     
