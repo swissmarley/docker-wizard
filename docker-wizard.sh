@@ -46,6 +46,7 @@ display_menu() {
 # Function to create a container with Dockerfile
 create_container_dockerfile() {
     # Prompt user for Dockerfile parameters
+    echo ""
     echo "Creating container with Dockerfile:"
     read -p "Enter container name: " container_name_df
     read -p "Enter base image : " image_name_df
@@ -83,6 +84,7 @@ create_container_dockerfile() {
 # Function to create a container with Docker Compose
 create_container_compose() {
     # Prompt user for Docker Compose parameters
+    echo ""
     echo "Creating container with Docker Compose:"
     read -p "Enter container name: " container_name_dc
     read -p "Enter service name: " service_name
